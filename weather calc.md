@@ -1,5 +1,6 @@
 #include <iostream>   // library for input/output (cout, cin)
 #include <cmath>      // library for math functions like pow()
+#include <limits>     // for std::numeric_limits
 using namespace std;  // so we can write cout, cin without std:: prefix
 
 // Function to calculate wind chill
@@ -26,28 +27,46 @@ int main() {
     // Explain what the program does
     cout << "this program will calculate wind chill and cloud base\n";
 
-    // Get air temperature from the user
-    cout << "please enter temperature in fahrenheit\n";
-    cin >> tempF;
-    if (cin.fail()) {
+    // Get air temperature from the user (with retry)
+    while (true) {
+        cout << "please enter temperature in fahrenheit\n";
+        cin >> tempF;
+
+        if (!cin.fail()) {
+            break; // valid number entered
+        }
+
         cout << "Invalid input for temperature. Please enter a number." << endl;
-        return 1; // exit with error code
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
-    // Get wind speed from the user
-    cout << "enter the wind speed in Mph\n";
-    cin >> wsMph;
-    if (cin.fail()) {
+    // Get wind speed from the user (with retry)
+    while (true) {
+        cout << "enter the wind speed in Mph\n";
+        cin >> wsMph;
+
+        if (!cin.fail()) {
+            break;
+        }
+
         cout << "Invalid input for wind speed. Please enter a number." << endl;
-        return 1;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
-    // Get dew point temperature from the user
-    cout << "finally enter the dew point\n";
-    cin >> dewp;
-    if (cin.fail()) {
+    // Get dew point temperature from the user (with retry)
+    while (true) {
+        cout << "finally enter the dew point\n";
+        cin >> dewp;
+
+        if (!cin.fail()) {
+            break;
+        }
+
         cout << "Invalid input for dew point. Please enter a number." << endl;
-        return 1;
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
     // Variables to store the results from the functions
