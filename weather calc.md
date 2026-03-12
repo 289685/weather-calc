@@ -29,14 +29,26 @@ int main() {
     // Get air temperature from the user
     cout << "please enter temperature in fahrenheit\n";
     cin >> tempF;
+    if (cin.fail()) {
+        cout << "Invalid input for temperature. Please enter a number." << endl;
+        return 1; // exit with error code
+    }
 
     // Get wind speed from the user
     cout << "enter the wind speed in Mph\n";
     cin >> wsMph;
+    if (cin.fail()) {
+        cout << "Invalid input for wind speed. Please enter a number." << endl;
+        return 1;
+    }
 
     // Get dew point temperature from the user
     cout << "finally enter the dew point\n";
     cin >> dewp;
+    if (cin.fail()) {
+        cout << "Invalid input for dew point. Please enter a number." << endl;
+        return 1;
+    }
 
     // Variables to store the results from the functions
     double windC, CBH;
