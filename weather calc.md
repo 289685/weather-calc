@@ -4,7 +4,7 @@ using namespace std;
 
 void calcWindChill(double& tempF, double& wsMph, double& windC);
 void calcCloudBase(double& tempF, double& dewp, double& CBH);
-double fail(const string& prompt);
+bool fail(const string& prompt, double& value);
 double getInputs(double& wsMph, double& dewp);
 double displayResults(double tempF, double wsMph, double dewp,
                       double windC, double CBH);
@@ -36,27 +36,27 @@ void calcCloudBase(double& tempF, double& dewp, double& CBH) {
     CBH = 1000.0 * (tempF - dewp) / 4.4;
 }
 
-double fail(const string& prompt) {
-    double value;
-    while (true) {
-        cout << prompt;
-        cin >> value;
+bool fail(const string& prompt, double& value) {
+    cout << prompt;
+    cin >> value;
 
-        if (!cin.fail()) {
-            return value;
-        }
-
-        cout << "Invalid input. Please enter a number." << endl;
-        cin.clear();
-        cin.ignore(10000, '\n');
+    if (!cin.fail()) {
+        return true;
     }
+
+    cout << "Invalid input. Please enter a number." << endl;
+    cin.clear();
+    cin.ignore(10000, '\n');
+    return false;
 }
 
 double getInputs(double& wsMph, double& dewp) {
     double tempF;
-    tempF = fail("Please enter temperature in Fahrenheit: ");
-    wsMph = fail("Enter the wind speed in mph: ");
-    dewp = fail("Finally, enter the dew point: ");
+
+    while (!fail("Please enter temperature in Fahrenheit: ", tempF)) {}
+    while (!fail("Enter the wind speed in mph: ", wsMph)) {}
+    while (!fail("Finally, enter the dew point: ", dewp)) {}
+
     return tempF;
 }
 
