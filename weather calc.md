@@ -1,47 +1,38 @@
-#include <iostream>   // library for input/output (cout, cin)
-#include <cmath>      // library for math functions like pow()
-#include <limits>     // for std::numeric_limits
-using namespace std;  // so we can write cout, cin without std:: prefix
+#include <iostream>
+#include <cmath>
+#include <limits>
+using namespace std;
 
-// Function to calculate wind chill
-// Parameters are passed by reference (&), and the result is written into windC
-void calcWindChill(double& tempF, double& wsMph, double& windC) {
-    // Wind chill formula (in Fahrenheit)
-    windC = 35.74
-            + 0.6215 * tempF
-            - 35.75 * pow(wsMph, 0.16)
-            + 0.4275 * tempF * pow(wsMph, 0.16);
-}
+// Function prototypes
+// Calculates wind chill given temperature (F) and wind speed (mph)
+void calcWindChill(double& tempF, double& wsMph, double& windC);
 
-// Function to calculate cloud base height
-// tempF and dewp (dew point) are inputs, CBH is the output (passed by reference)
-void calcCloudBase(double& tempF, double& dewp, double& CBH) {
-    // Cloud base height in feet (approx), using common aviation formula
-    CBH = 1000.0 * (tempF - dewp) / 4.4;
-}
+// Calculates cloud base height given temperature (F) and dew point (F)
+void calcCloudBase(double& tempF, double& dewp, double& CBH);
 
 int main() {
-    // Variables for temperature (F), wind speed (mph), and dew point (F)
-    double tempF, wsMph, dewp;
+    // Variable declarations
+    double tempF, wsMph, dewp, windC, CBH;
 
-    // Explain what the program does
     cout << "this program will calculate wind chill and cloud base\n";
 
-    // Get air temperature from the user (with retry)
+    // Get temperature input, with validation loop
     while (true) {
         cout << "please enter temperature in fahrenheit\n";
         cin >> tempF;
 
+        // If extraction succeeded, break out of loop
         if (!cin.fail()) {
-            break; // valid number entered
+            break;
         }
 
+        // If input failed, show error and clear input state
         cout << "Invalid input for temperature. Please enter a number." << endl;
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.clear(); // clear error flags
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // discard invalid input
     }
 
-    // Get wind speed from the user (with retry)
+    // Get wind speed input, with validation loop
     while (true) {
         cout << "enter the wind speed in Mph\n";
         cin >> wsMph;
@@ -55,7 +46,7 @@ int main() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
-    // Get dew point temperature from the user (with retry)
+    // Get dew point input, with validation loop
     while (true) {
         cout << "finally enter the dew point\n";
         cin >> dewp;
@@ -69,19 +60,36 @@ int main() {
         cin.ignore(numeric_limits<streamsize>::max(), '\n');
     }
 
-    // Variables to store the results from the functions
-    double windC, CBH;
-
-    // Call function to compute wind chill (result stored in windC)
+    // Call function to compute wind chill
     calcWindChill(tempF, wsMph, windC);
 
-    // Call function to compute cloud base height (result stored in CBH)
+    // Call function to compute cloud base height
     calcCloudBase(tempF, dewp, CBH);
 
-    // Output the results to the user
+    // Display results
     cout << "the wind chill is " << windC << " F" << endl;
     cout << "the cloud base height " << CBH << endl;
 
-    // Indicate that the program ended successfully
     return 0;
+}
+
+// Calculates wind chill using the standard wind chill formula
+// tempF: air temperature in Fahrenheit
+// wsMph: wind speed in miles per hour
+// windC: resulting wind chill temperature in Fahrenheit
+void calcWindChill(double& tempF, double& wsMph, double& windC) {
+    windC = 35.74
+            + 0.6215 * tempF
+            - 35.75 * pow(wsMph, 0.16)
+            + 0.4275 * tempF * pow(wsMph, 0.16);
+}
+
+// Calculates cloud base height (CBH) in feet
+// using the approximation: CBH = 1000 * (T - Td) / 4.4
+// tempF: air temperature in Fahrenheit
+// dewp: dew point in Fahrenheit
+// CBH: cloud base height in feet
+void calcCloudBase(double& tempF, double& dewp, double& CBH) {
+    CBH = 1000.0 * (tempF - dewp) / 4.4;
+}
 }
