@@ -1,105 +1,87 @@
-#include <iostream>   // for input/output (cin, cout)
-#include <cmath>      // for math functions like pow()
-using namespace std;
+#include <iostream>   // include standard input/output stream library
+#include <cmath>      // include standard math library for functions like pow()
+using namespace std;  // use the standard namespace to avoid std:: prefixes
 
 // Function prototypes
-void   calcWindChill(double tempF, double wsMph, double& windC);
-void   calcCloudBase(double tempF, double dewp, double& CBH);
-bool   fail(const string& prompt, double& value);
-double getInputs(double& tempF, double& wsMph, double& dewp);
-double displayResults(double tempF, double wsMph, double dewp,
+void   calcWindChill(double tempF, double wsMph, double& windC); // declare wind chill calculation function
+void   calcCloudBase(double tempF, double dewp, double& CBH);    // declare cloud base height calculation function
+bool   fail(const string& prompt, double& value);                // declare input validation helper function
+double getInputs(double& tempF, double& wsMph, double& dewp);   // declare function to gather all user inputs
+double displayResults(double tempF, double wsMph, double dewp,  // declare function to print all results
                       double windC, double CBH);
 
-int main() {
-    double tempF, wsMph, dewp, windC, CBH; // variables for temperature, wind speed, dew point, results
+int main() {                                                     // program entry point
+    double tempF, wsMph, dewp, windC, CBH;                       // declare variables for temperature, wind speed, dew point, and outputs
 
-    // Intro message
-    cout << "This program will calculate wind chill and cloud base" << endl;
+    cout << "This program will calculate wind chill and cloud base" << endl; // print introductory message
 
-    // Get user input values
-    double inputStatus = getInputs(tempF, wsMph, dewp);
-    if (inputStatus != 0) {         // if input failed in some way
-        cout << "Error getting inputs. Exiting program." << endl;
-        return 1;
+    double inputStatus = getInputs(tempF, wsMph, dewp);          // call function to read user inputs
+    if (inputStatus != 0) {                                     // check if input operation failed
+        cout << "Error getting inputs. Exiting program." << endl; // print error message on failed input
+        return 1;                                               // return nonzero status to indicate error
     }
 
-    // Calculate wind chill using formula
-    calcWindChill(tempF, wsMph, windC);
+    calcWindChill(tempF, wsMph, windC);                         // compute wind chill using input temperature and wind speed
 
-    // Calculate cloud base height
-    calcCloudBase(tempF, dewp, CBH);
+    calcCloudBase(tempF, dewp, CBH);                            // compute cloud base height using temperature and dew point
 
-    // Display all results
-    displayResults(tempF, wsMph, dewp, windC, CBH);
+    displayResults(tempF, wsMph, dewp, windC, CBH);             // output all the calculated values to the console
 
-    return 0; // end program
+    return 0;                                                   // indicate successful program completion
 }
 
-// Function to calculate wind chill based on temperature and wind speed
-void calcWindChill(double tempF, double wsMph, double& windC) {
-    // Standard wind chill formula
-    windC = 35.74
-          + 0.6215 * tempF
-          - 35.75 * pow(wsMph, 0.16)
-          + 0.4275 * tempF * pow(wsMph, 0.16);
+void calcWindChill(double tempF, double wsMph, double& windC) { // define wind chill calculation function
+    windC = 35.74                                               // start with constant term in wind chill formula
+          + 0.6215 * tempF                                      // add term proportional to temperature
+          - 35.75 * pow(wsMph, 0.16)                           // subtract term depending on wind speed to a power
+          + 0.4275 * tempF * pow(wsMph, 0.16);                 // add mixed term involving temperature and wind speed
 }
 
-// Function to calculate cloud base height
-void calcCloudBase(double tempF, double dewp, double& CBH) {
-    // Cloud base formula (approximation in feet)
-    CBH = 1000.0 * (tempF - dewp) / 4.4;
+void calcCloudBase(double tempF, double dewp, double& CBH) {    // define cloud base height calculation function
+    CBH = 1000.0 * (tempF - dewp) / 4.4;                        // apply approximate formula to compute height in feet
 }
 
-// Function to safely get numeric input from the user
-// Returns true if a valid number was read, false if input failed (e.g., EOF)
-bool fail(const string& prompt, double& value) {
-    while (true) {
-        cout << prompt;   // ask user for input
-        cin >> value;     // attempt to read value
+bool fail(const string& prompt, double& value) {                // define helper to safely read a numeric input
+    while (true) {                                              // repeatedly attempt to get valid input
+        cout << prompt;                                         // print the request message to the user
+        cin >> value;                                           // read a numeric value from standard input
 
-        if (!cin.fail()) {
-            // valid number
-            return true;
+        if (!cin.fail()) {                                      // check if extraction succeeded
+            return true;                                        // return success if value is valid
         }
 
-        if (cin.eof()) {
-            // user closed input stream
-            return false;
+        if (cin.eof()) {                                        // check if end-of-file or stream closure occurred
+            return false;                                       // return failure if input stream is closed
         }
 
-        // If input is invalid, show error and reset input stream
-        cout << "Invalid input. Please enter a number." << endl;
-        cin.clear();               // clear error flag
-        cin.ignore(10000, '\n');  // discard bad input
+        cout << "Invalid input. Please enter a number." << endl; // notify user about invalid input
+        cin.clear();                                             // clear input stream error state
+        cin.ignore(10000, '\n');                                // discard remaining invalid characters in the buffer
     }
 }
 
-// Function to collect all user inputs
-// Returns 0 on success, -1 if any input fails
-double getInputs(double& tempF, double& wsMph, double& dewp) {
-    if (!fail("Please enter temperature in Fahrenheit: ", tempF)) {
-        return -1.0;
+double getInputs(double& tempF, double& wsMph, double& dewp) { // define function to gather all needed inputs
+    if (!fail("Please enter temperature in Fahrenheit: ", tempF)) { // request temperature and check success
+        return -1.0;                                            // return error code if temperature input fails
     }
-    if (!fail("Enter the wind speed in mph: ", wsMph)) {
-        return -1.0;
+    if (!fail("Enter the wind speed in mph: ", wsMph)) {       // request wind speed and check success
+        return -1.0;                                            // return error code if wind speed input fails
     }
-    if (!fail("Finally, enter the dew point: ", dewp)) {
-        return -1.0;
+    if (!fail("Finally, enter the dew point: ", dewp)) {       // request dew point and check success
+        return -1.0;                                            // return error code if dew point input fails
     }
 
-    return 0.0; // success
+    return 0.0;                                                 // return success code when all inputs are valid
 }
 
-// Function to display formatted results
-// Returns 0 after displaying
-double displayResults(double tempF, double wsMph, double dewp,
+double displayResults(double tempF, double wsMph, double dewp, // define function to show input and computed values
                       double windC, double CBH) {
-    cout << "\n===== Weather Results =====" << endl;
-    cout << "Temperature: " << tempF << " F" << endl;
-    cout << "Wind speed:  " << wsMph << " mph" << endl;
-    cout << "Dew point:   " << dewp << " F" << endl;
-    cout << "Wind chill:  " << windC << " F" << endl;
-    cout << "Cloud base height: " << CBH << " ft" << endl;
+    cout << "\n===== Weather Results =====" << endl;          // print section header for results
+    cout << "Temperature: " << tempF << " F" << endl;         // display the input temperature
+    cout << "Wind speed:  " << wsMph << " mph" << endl;       // display the input wind speed
+    cout << "Dew point:   " << dewp << " F" << endl;          // display the input dew point
+    cout << "Wind chill:  " << windC << " F" << endl;         // display the calculated wind chill
+    cout << "Cloud base height: " << CBH << " ft" << endl;    // display the calculated cloud base height
 
-    return 0.0;
+    return 0.0;                                                 // return value indicating function completed
 }
