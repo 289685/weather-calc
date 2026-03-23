@@ -12,13 +12,13 @@ int main()
 	int father, mother, end;
 	end = 1;
 	do {
-	    intro();
-	    getinput(father,mother,end);
-	    displaysquare(father,mother);
-	    loop(end);    
+		intro();
+		getinput(father,mother,end);
+		displaysquare(father,mother);
+		loop(end);
 	} while (end != 1);
-	
-	
+
+
 	return 0;
 }
 void intro() {
