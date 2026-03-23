@@ -1,87 +1,87 @@
-#include <iostream>   // include standard input/output stream library
-#include <cmath>      // include standard math library for functions like pow()
-using namespace std; // too avoid repeating std:: before every statement 
+#include <iostream>
+#include <string>
+#include <sstream>
+using namespace std;
+void intro();
+void getinput(int& father,int& mother, int& end);
+void displaysquare(int& father,int& mother);
+void loop(int& end);
 
-// Function prototypes
-void   calcWindChill(double& tempF, double& wsMph, double& windC); // function for windchill calculation
-void   calcCloudBase(double& tempF, double& dewp, double& CBH);    // function for windchill claculation
-bool   fail(const string& prompt, double& value);                  // function for fail statement 
-double getInputs(double& tempF, double& wsMph, double& dewp);      // function to get all inputs 
-double displayResults(double& tempF, double& wsMph, double& dewp, // function to display results
-                      double& windC, double& CBH);
-
-int main() {                                                       // start of main
-    double tempF, wsMph, dewp, windC, CBH;                         // declare variables
-
-    cout << "This program will calculate wind chill and cloud base" << endl; // intro
-
-    double inputStatus = getInputs(tempF, wsMph, dewp);            // call function to read user inputs
-    if (inputStatus != 0) {                                        // check if input operation failed
-        cout << "Error getting inputs. Exiting program." << endl; // error message
-        return 1;                                                  // nonzero status
-    }
-
-    calcWindChill(tempF, wsMph, windC);                            // calc wind chill
-
-    calcCloudBase(tempF, dewp, CBH);                               // calc cloud base
-
-    displayResults(tempF, wsMph, dewp, windC, CBH);                // output all values
-
-    return 0;                                                      // end
+int main()
+{
+	int father, mother, end;
+	end = 1;
+	do {
+	    intro();
+	    getinput(father,mother,end);
+	    displaysquare(father,mother);
+	    loop(end);    
+	} while (end != 1);
+	
+	
+	return 0;
 }
-
-void calcWindChill(double& tempF, double& wsMph, double& windC) {  // calcs windchill
-    windC = 35.74                                                   
-          + 0.6215 * tempF                                          
-          - 35.75 * pow(wsMph, 0.16)                                
-          + 0.4275 * tempF * pow(wsMph, 0.16);                     
+void intro() {
+	cout<<"this program will calculate the chances of having colorblindness\n";
 }
-
-void calcCloudBase(double& tempF, double& dewp, double& CBH) {     // calc cloud base
-    CBH = 1000.0 * (tempF - dewp) / 4.4;                           // formula
+void getinput(int& father,int& mother, int& end) {
+	cout<<"if the father is colorblind enter 1, if not press 2\n";
+	cin>>father;
+	cout<<"if the mother is colorblind press 1, if shes a silent carrier press 2, if not press 3\n";
+	cin>>mother;
 }
-
-bool fail(const string& prompt, double& value) {                   // fail statement
-    while (true) {                                                  
-        cout << prompt;                                             
-        cin >> value;                                              
-
-        if (!cin.fail()) {                                         
-            return true;                                           
-        }
-
-        if (cin.eof()) {                                           
-            return false;                                          
-        }
-
-        cout << "Invalid input. Please enter a number." << endl;  
-        cin.clear();                                               
-        cin.ignore(10000, '\n');                                   
-    }
+void displaysquare(int& father,int& mother) {
+	if (father == 1 & mother == 1) {
+		cout << "              Xc       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   Xc  |     XcXc      |       XcY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   Xc  |     XcXc      |       XcY     |\n";
+		cout << "       ---------------------------------\n";
+	} else if (father == 1 & mother == 2) {
+		cout << "              Xc       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   Xc  |     XcXc      |       XcY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   X   |     XcX       |       XY      |\n";
+		cout << "       ---------------------------------\n";
+	} else if (father == 1 & mother == 3) {
+		cout << "              Xc       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   X   |      XcX      |        XY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   X   |      XcX      |        XY     |\n";
+		cout << "       ---------------------------------\n";
+	} else if (father == 2 & mother == 1) {
+		cout << "               X       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   Xc  |      XXc      |       XcY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   Xc  |      XXc      |       XcY     |\n";
+		cout << "       ---------------------------------\n";
+	} else if (father == 2 & mother == 2) {
+		cout << "               X       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   Xc  |      XXc      |       XcY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   X   |      XX       |       XY      |\n";
+		cout << "       ---------------------------------\n";
+	} else if (father == 2 & mother == 3) {
+		cout << "               X       |        Y\n";
+		cout << "       ---------------------------------\n";
+		cout << "   X   |       XX      |        XY     |\n";
+		cout << "----------------------------------------\n";
+		cout << "   X   |       XX      |        XY     |\n";
+		cout << "       ---------------------------------\n";
+	} else {
+		cout << "Invalid inputs\n";
+	}
 }
+void loop(int& end) {
+	cout << "Would you like to run another simulation press 1 for yes, for no press any other key \n";
+	cin >> end;
+	if (end == 1) {
 
-double getInputs(double& tempF, double& wsMph, double& dewp) {    // gets inputs
-    if (!fail("Please enter temperature in Fahrenheit: ", tempF)) { // request temperature
-        return -1.0;                                               // error
-    }
-    if (!fail("Enter the wind speed in mph: ", wsMph)) {         // request wind speed
-        return -1.0;                                               // error
-    }
-    if (!fail("Finally, enter the dew point: ", dewp)) {         // request dew point
-        return -1.0;                                               // error
-    }
-
-    return 0.0;                                                    // success
-}
-
-double displayResults(double& tempF, double& wsMph, double& dewp, // display message
-                      double& windC, double& CBH) {
-    cout << "\n===== Weather Results =====" << endl;           // header
-    cout << "Temperature: " << tempF << " F" << endl;          // temperature
-    cout << "Wind speed:  " << wsMph << " mph" << endl;        // wind speed
-    cout << "Dew point:   " << dewp << " F" << endl;           // dew point
-    cout << "Wind chill:  " << windC << " F" << endl;          // wind chill
-    cout << "Cloud base height: " << CBH << " ft" << endl;     // cloud base height
-
-    return 0.0;                                                    // finish code
+	} else {
+	}
 }
